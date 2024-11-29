@@ -35,6 +35,8 @@ dependencies:
   encrypt: ^5.0.3
   flutter:
     sdk: flutter
+  flutter_native_splash: ^2.4.3
+  flutter_secure_storage: ^9.2.2
   logger: ^2.5.0
   pointycastle: ^3.9.1
 
@@ -56,6 +58,7 @@ flutter:
   assets:
     - assets/keys/private.pem
     - assets/keys/public.pem
+    - assets/logo.png
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,19 +1,36 @@
 import 'package:encryption_data_app/helpers/encryption/encryption.dart';
+import 'package:encryption_data_app/helpers/secure_storage_helper.dart';
 import 'package:encryption_data_app/services/accounts_service.dart';
+import 'package:encryption_data_app/services/keys_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:logger/logger.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(),
 );
 
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  final publicKey = await KeysService.getPublicKey();
+  final privateKey = await KeysService.getPrivateKey();
+
+  await SecureStorageHelper.write(key: 'ch_public_key', value: publicKey);
+  await SecureStorageHelper.write(key: 'ch_private_key', value: privateKey);
+
+  logger.d('Public key: $publicKey');
+  logger.d('Private key: $privateKey');
+
+  return runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    FlutterNativeSplash.remove();
     return MaterialApp(
       title: 'Material App',
       home: Scaffold(
@@ -47,7 +64,6 @@ class MyApp extends StatelessWidget {
             FilledButton(
                 onPressed: () async {
                   final decryptedData = await AccountsService.getAccounts2();
-
                   logger.d('Data: $decryptedData');
                 },
                 child: const Text('Obtener cuentas 2')),
